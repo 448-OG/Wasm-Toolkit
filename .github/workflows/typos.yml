@@ -1,0 +1,23 @@
+name: Check for Typos
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  typo-check:
+    name: Spell Check with Typos
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Actions Repository
+      uses: actions/checkout@v4
+
+    - name: Writes changes in the local checkout
+      uses: crate-ci/typos@master
+      with:
+        write_changes: false
