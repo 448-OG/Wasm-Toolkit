@@ -1,2 +1,2 @@
 # Wasm-Toolkit
-Lightweight WebAssembly library to ship frontends fast!
+Lightweight WebAssembly components library to ship frontends fast! 

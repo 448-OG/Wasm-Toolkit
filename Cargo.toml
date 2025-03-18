@@ -1,0 +1,10 @@
+[workspace]
+members = ["lib"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+authors = ["448-OG <superuser@448.africa>"]
+edition = "2021"
+license = "Apache-2.0 OR MIT"
+description = "Lightweight WebAssembly components library to ship frontends fast!"
