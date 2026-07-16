@@ -1,10 +1,67 @@
-[workspace]
-members = ["lib"]
-resolver = "2"
-
-[workspace.package]
-version = "0.1.0"
+[package]
+name = "wasm-toolkit"
+version = "0.2.1"
 authors = ["448-OG <superuser@448.africa>"]
-edition = "2021"
-license = "Apache-2.0 OR MIT"
-description = "Lightweight WebAssembly components library to ship frontends fast!"
+description = "Utilities for common WebAssembly operations like error handling, fetching browser windows, etc while utilizing the same error handling methods."
+keywords = ["WebAssembly", "wasm"]
+license = "Apache-2.0"
+edition = "2024"
+
+[dependencies]
+async-channel = { version = "2.5.0", optional = true }
+async-lock = { version = "3.4.2", optional = true }
+base64ct = { version = "1.8.3", features = ["std"] }
+blake3 = { version = "1.8.5", optional = true }
+file-format = "0.29.0"
+gloo-timers = { version = "0.4.0", default-features = false, optional = true }
+js-sys = { version = "0.3.103", optional = true }
+thiserror = { version = "2.0.18", optional = true }
+tracing = { version = "0.1.44", default-features = false, optional = true }
+wasm-bindgen = { version = "0.2.126", optional = true }
+wasm-bindgen-futures = { version = "0.4.76", optional = true }
+web-sys = {
+  version = "0.3.103",
+  features = [
+    "Blob",
+    "Clipboard",
+    "CssStyleDeclaration",
+    "DataTransfer",
+    "Document",
+    "DomException",
+    "DomTokenList",
+    "DragEvent",
+    "Element",
+    "Event",
+    "File",
+    "FileList",
+    "HtmlElement",
+    "HtmlHeadElement",
+    "HtmlInputElement",
+    "HtmlLinkElement",
+    "Location",
+    "MediaQueryList",
+    "Navigator",
+    "NodeList",
+    "ScrollBehavior",
+    "ScrollToOptions",
+    "Storage",
+    "VisualViewport",
+    "Window",
+    "console",
+  ],
+  optional = true
+}
+
+[features]
+wasm = [
+  "dep:async-channel",
+  "dep:async-lock",
+  "dep:blake3",
+  "dep:gloo-timers",
+  "dep:js-sys",
+  "dep:thiserror",
+  "dep:tracing",
+  "dep:wasm-bindgen",
+  "dep:wasm-bindgen-futures",
+  "dep:web-sys",
+]

@@ -4,7 +4,7 @@ on: [push, pull_request]
 jobs:
   doc:
     name: Documentation
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     env:
       RUSTDOCFLAGS: -Dwarnings
     steps:
