@@ -1,11 +1,12 @@
 [package]
 name = "wasm-toolkit"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["448-OG <superuser@448.africa>"]
 description = "Utilities for common WebAssembly operations like error handling, fetching browser windows, etc while utilizing the same error handling methods."
 keywords = ["WebAssembly", "wasm"]
 license = "Apache-2.0"
 edition = "2024"
+repository = "https://github.com/448-OG/Wasm-Toolkit.git"
 
 [dependencies]
 async-channel = { version = "2.5.0", optional = true }
@@ -53,6 +54,7 @@ web-sys = {
 }
 
 [features]
+default = ["wasm"]
 wasm = [
   "dep:async-channel",
   "dep:async-lock",

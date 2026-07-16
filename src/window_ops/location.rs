@@ -89,7 +89,7 @@ impl WasmWindow {
     /// return a URL-port string, so one might have assumed the setter to always "reset" both.
     ///
     /// ### Examples
-    /// ```
+    /// ```txt
     /// 1. https://developer.mozilla.org/en-US/docs/Web/API/URL/host
     /// "developer.mozilla.org"
     ///
@@ -113,7 +113,7 @@ impl WasmWindow {
     ///
     /// The port is only included if it's not the default for the protocol.
     ///
-    /// ### Example: 'https://developer.mozilla.org'
+    /// ### Example: `https://developer.mozilla.org`
     pub fn origin(&self) -> WasmToolkitResult<String> {
         self.location().origin().map_err(|error| {
             let outcome = WasmToolkitCommon::exception_or_stringify(&error);
@@ -122,6 +122,7 @@ impl WasmWindow {
         })
     }
 
+    /// ```txt
     /// The href property of the Location interface is a stringifier that returns
     /// a string containing the whole URL, and allows the href to be updated.
     /// Setting the value of href navigates to the provided URL.
@@ -133,8 +134,8 @@ impl WasmWindow {
     /// meaning the user won't be able to use the back button to navigate to it.
     ///
     /// ### Example
-    ///  https://developer.mozilla.org/en-US/docs/Web/API/URL/href
-    /// Yields: https://developer.mozilla.org/en-US/docs/Web/API/URL/href
+    ///  `https://developer.mozilla.org/en-US/docs/Web/API/URL/href`
+    /// Yields: `https://developer.mozilla.org/en-US/docs/Web/API/URL/href`
     /// ```
     pub fn href(&self) -> WasmToolkitResult<String> {
         self.location().href().map_err(|error| {
