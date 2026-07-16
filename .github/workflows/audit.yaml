@@ -1,23 +1,14 @@
 name: Security audit
-
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
-
-env:
-  CARGO_TERM_COLOR: always
-
-jobs: 
-  run-formatter:
+    paths: 
+      - '**/Cargo.toml'
+      - '**/Cargo.lock'
+jobs:
+  security_audit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install cargo-audit formatter
-        run: cargo install cargo-audit --locked
-      - name: Run cargo check
-        run: cargo check
-      - name: Run audit checks
-        run: cargo audit
-  
+      - uses: rustsec/audit-check@v2.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
