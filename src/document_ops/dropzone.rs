@@ -43,7 +43,7 @@ impl WasmDocument {
                         "Error trying to add the class `hover` to dropzone element",
                     );
 
-                    web_sys::console::error_1(&formatted_error.to_string().into());
+                    tracing::error!("{}", &formatted_error.to_string());
 
                     error_sender_fn(error_sender1.clone(), error);
                 }
@@ -75,7 +75,7 @@ impl WasmDocument {
                         "Error trying to remove the class `hover` to dropzone element",
                     );
 
-                    web_sys::console::error_1(&formatted_error.to_string().into());
+                    tracing::error!("{}", formatted_error.to_string());
 
                     error_sender_fn(error_sender.clone(), error);
                 }
@@ -107,6 +107,7 @@ impl WasmDocument {
             let drop_event_callback = Closure::wrap(Box::new(move |event: DragEvent| {
                 event.prevent_default();
 
+                #[cfg(debug_assertions)]
                 tracing::error!("DROPPED EVENT RECEIVED");
 
                 if let Err(error) = cloned_dropzone.class_list().remove_1("hover") {
@@ -120,15 +121,30 @@ impl WasmDocument {
 
                     (0..num_of_files).for_each(|index| {
                         if let Some(file) = file_list.get(index) {
+                            #[cfg(debug_assertions)]
+                            tracing::info!(
+                                "File: {}-{:.2}",
+                                file.name(),
+                                (file.size() / (1024f64 * 1024f64))
+                            );
+
                             if mime_filters.is_empty() {
                                 Self::check_and_send(file, sender.clone(), error_sender.clone());
                             } else {
                                 let file_type = file.type_();
 
-                                if mime_filters
-                                    .iter()
-                                    .any(|filter| file_type.starts_with(filter))
-                                {
+                                if mime_filters.iter().any(|filter| {
+                                    let filter_parts =
+                                        filter.split("/").collect::<Vec<&str>>().len();
+
+                                    if filter_parts > 2 {
+                                        false
+                                    } else if filter_parts == 2 {
+                                        file_type == *filter
+                                    } else {
+                                        file_type.starts_with(filter)
+                                    }
+                                }) {
                                     Self::check_and_send(
                                         file,
                                         sender.clone(),
@@ -168,7 +184,8 @@ impl WasmDocument {
             let selected_event_callback = Closure::wrap(Box::new(move |event: web_sys::Event| {
                 event.prevent_default();
 
-                tracing::error!("SELECTED FILE EVENT RECEIVED");
+                #[cfg(debug_assertions)]
+                tracing::info!("SELECTED FILE EVENT RECEIVED");
 
                 if let Err(error) = cloned_dropzone.class_list().remove_1("hover") {
                     error_sender_fn(error_sender.clone(), error);
@@ -192,15 +209,30 @@ impl WasmDocument {
 
                     (0..num_of_files).for_each(|index| {
                         if let Some(file) = file_list.get(index) {
+                            #[cfg(debug_assertions)]
+                            tracing::info!(
+                                "File: {}-{:.2}",
+                                file.name(),
+                                (file.size() / (1024f64 * 1024f64))
+                            );
+
                             if mime_filters.is_empty() {
                                 Self::check_and_send(file, sender.clone(), error_sender.clone());
                             } else {
                                 let file_type = file.type_();
 
-                                if mime_filters
-                                    .iter()
-                                    .any(|filter| file_type.starts_with(filter))
-                                {
+                                if mime_filters.iter().any(|filter| {
+                                    let filter_parts =
+                                        filter.split("/").collect::<Vec<&str>>().len();
+
+                                    if filter_parts > 2 {
+                                        false
+                                    } else if filter_parts == 2 {
+                                        file_type == *filter
+                                    } else {
+                                        file_type.starts_with(filter)
+                                    }
+                                }) {
                                     Self::check_and_send(
                                         file,
                                         sender.clone(),
@@ -279,13 +311,10 @@ impl WasmDocument {
                                 };
 
                                 if sender.send(dropzone_outcome).await.is_err() {
-                                    web_sys::console::error_1(
-                                    &format!(
+                                    tracing::error!(
                                         "Error Sender encountered an error when trying to send back the contents of `{}` in the  dropzone!",
                                         file_name
-                                    )
-                                    .into(),
-                                );
+                                    );
                                 }
                             }
                         } else {
@@ -417,12 +446,9 @@ fn error_sender_fn(error_sender: Option<Sender<NotificationType>>, error: JsValu
                 )))
                 .await
             {
-                web_sys::console::error_1(
-                    &format!(
-                        "Error Sender encountered an error when trying to send back the error for dropzone: `{}`",
-                        error
-                    )
-                    .into(),
+                tracing::error!(
+                    "Error Sender encountered an error when trying to send back the error for dropzone: `{}`",
+                    error
                 );
             }
         });
