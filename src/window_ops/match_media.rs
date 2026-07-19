@@ -40,10 +40,7 @@ impl WasmWindow {
                 let is_dark_mode = query_spawned.borrow().matches();
 
                 if let Err(error) = sender.send(is_dark_mode).await {
-                    web_sys::console::error_2(
-                        &"Dark mode listener error: ".into(),
-                        &error.to_string().into(),
-                    );
+                    tracing::error!("Dark mode listener error: {}", error.to_string());
                 }
             });
         }) as Box<dyn Fn(_)>);
@@ -56,9 +53,9 @@ impl WasmWindow {
 
             Ok(receiver)
         } else {
-            web_sys::console::error_1(
-                        &"Unable to set `onchange` event lister for event checking when a user switches from dark mode to light mode and vise-versa!".into(),
-                    );
+            tracing::error!(
+                "Unable to set `onchange` event lister for event checking when a user switches from dark mode to light mode and vise-versa!",
+            );
 
             Err(WasmToolkitError::AddEventListener(
                 "`onchange` event listener for checking dark and light modes".to_string(),
