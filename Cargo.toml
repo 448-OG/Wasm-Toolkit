@@ -54,7 +54,6 @@ web-sys = {
 
 [features]
 default = ["wasm"]
-tracing_debug = []
 wasm = [
   "dep:async-channel",
   "dep:async-lock",
